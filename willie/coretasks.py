@@ -323,7 +323,7 @@ def track_join(bot, trigger):
 
 @willie.module.rule('.*')
 @willie.module.event('QUIT')
-@willie.module.priority('high')
+@willie.module.priority('medium')
 @willie.module.thread(False)
 @willie.module.unblockable
 def track_quit(bot, trigger):
