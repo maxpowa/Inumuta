@@ -87,21 +87,21 @@ def main(argv=None):
                             dest='mod_wizard', help=(
                                 'Run the configuration wizard, but only for the '
                                 'module configuration options.'))
-        parser.add_argument('--configure-database', action='store_true',
-                            dest='db_wizard', help=(
-                                'Run the configuration wizard, but only for the '
-                                'database configuration options.'))
         parser.add_argument('-v', '--version', action="store_true",
                             dest="version", help="Show version number and exit")
         opts = parser.parse_args()
 
+        # Step Two: "Do not run as root" checks.
         try:
+            # Linux/Mac
             if os.getuid() == 0 or os.geteuid() == 0:
                 stderr('Error: Do not run Willie with root privileges.')
                 sys.exit(1)
         except AttributeError:
-            # Windows don't have os.getuid/os.geteuid
-            pass
+            # Windows
+            if os.environ.get("USERNAME") == "Administrator":
+                stderr('Error: Do not run Willie as Administrator.')
+                sys.exit(1)
 
         if opts.version:
             py_ver = '%s.%s.%s' % (sys.version_info.major,
@@ -115,9 +115,6 @@ def main(argv=None):
             return
         elif opts.mod_wizard:
             wizard('mod', opts.config)
-            return
-        elif opts.db_wizard:
-            wizard('db', opts.config)
             return
 
         if opts.list_configs:
