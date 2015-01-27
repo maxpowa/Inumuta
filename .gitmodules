@@ -2,3 +2,6 @@
 	path = docs/wiki
 	url = git://github.com/embolalia/willie.wiki.git
 	branch = master
+[submodule "willie/modules"]
+	path = willie/modules
+	url = https://github.com/maxpowa/inumuta-modules.git
