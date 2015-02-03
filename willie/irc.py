@@ -500,7 +500,9 @@ class Bot(asynchat.async_chat):
                 LOGGER.error("Could not save traceback from %s to file: %s", trigger.sender, str(e))
 
             if trigger:
-                self.msg(self.config.core.debug_target, 'Exception in '+trigger.sender+': '+signature)
+                self.msg(self.config.core.debug_target, 'Exception in '+trigger.sender+'!')
+                self.msg(self.config.core.debug_target, signature)
+                self.msg(self.config.core.debug_target, 'Cause: '+trigger.raw)
         except Exception as e:
             if trigger:
                 if self.config.core.debug_target:
