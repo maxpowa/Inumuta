@@ -87,6 +87,9 @@ class Bot(asynchat.async_chat):
         self.writing_lock = threading.Lock()
         self.raw = None
 
+        self.floodprotec = 1000
+        self.allowed_chars = self.floodprotec
+        
         # Right now, only accounting for two op levels.
         # This might be expanded later.
         # These lists are filled in startup.py, as of right now.
@@ -421,8 +424,8 @@ class Bot(asynchat.async_chat):
         try:
             self.sending.acquire()
 
-            # No messages within the last 3 seconds? Go ahead!
-            # Otherwise, wait so it's been at least 0.8 seconds + penalty
+            # No messages within the last 10 seconds? Go ahead!
+            # Otherwise, wait so that we don't send more than 1000 characters in 10 seconds
 
             recipient_id = Identifier(recipient)
 
@@ -430,11 +433,15 @@ class Bot(asynchat.async_chat):
                 self.stack[recipient_id] = []
             elif self.stack[recipient_id]:
                 elapsed = time.time() - self.stack[recipient_id][-1][0]
-                if elapsed < 3:
-                    penalty = float(max(0, len(text) - 50)) / 70
-                    wait = 0.7 + penalty
-                    if elapsed < wait:
-                        time.sleep(wait - elapsed)
+                if elapsed < 5:
+                    self.allowed_chars = min(self.allowed_chars + (self.floodprotec / 10.0) * elapsed, self.floodprotec)
+                    self.allowed_chars -= len(text)
+                    if len(text) > self.allowed_chars:
+                        delay = (len(text) * 0.8) / (self.floodprotec / 10.0)
+                        delay = min(delay, 0.75)
+                        time.sleep(delay)
+                else:
+                    self.allowed_chars = self.floodprotec
 
                 # Loop detection
                 messages = [m[1] for m in self.stack[recipient_id][-8:]]
