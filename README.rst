@@ -1,4 +1,4 @@
-Introduction |build-status|
+Introduction |build-status| |shippable-status|
 ---------------------------------------------
 
 Inumuta is a simple, lightweight, open source, easy-to-use IRC Utility bot,
