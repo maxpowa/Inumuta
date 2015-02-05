@@ -1,0 +1,18 @@
+language: python
+python:
+  - 2.7
+  - 3.3
+git:
+  submodules: false
+before_script: mkdir -p shippable/codecoverage shippable/testresults
+install:
+  - sudo apt-get install -qq enchant
+  - pip install -r dev-requirements.txt
+  - pip install coveralls
+  - pip install pep8
+script:
+  - ./checkstyle.sh
+  - coverage run --source willie -m py.test .
+  - coverage report --show-missing
+after_success:
+  coveralls
