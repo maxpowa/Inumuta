@@ -89,7 +89,7 @@ class Bot(asynchat.async_chat):
 
         self.floodprotec = 1000
         self.allowed_chars = self.floodprotec
-        
+
         # Right now, only accounting for two op levels.
         # This might be expanded later.
         # These lists are filled in startup.py, as of right now.
