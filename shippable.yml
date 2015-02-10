@@ -16,3 +16,5 @@ script:
   - coverage report --show-missing
 after_success:
   coveralls
+# to speed up builds, we can cache deps.
+cache: true
