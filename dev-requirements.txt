@@ -11,3 +11,4 @@ bs4
 pyfiglet
 tweepy
 mcstatus
+wolframalpha
