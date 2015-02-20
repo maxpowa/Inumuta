@@ -32,28 +32,16 @@ def mirkocraft(bot, trigger):
 def asie(bot, trigger):
     bot.say('pls http://puu.sh/bGfyj/488b072f12.png')
 
+@module.commands('docker')
+def docker(bot, trigger):
+    bot.say('http://i.imgur.com/syIGxF0.png')
+
 @module.commands('under')
 def underwhere(bot, trigger):
     if trigger.group(2) == None:
         return
     if trigger.group(2).strip() == 'where':
         bot.say('Under here: https://www.youtube.com/watch?v=_ak4rincQ5Y')
-
-@module.commands('colt', 'cookie')
-def colt(bot, trigger):
-    """
-    .cookie [target] - Apparently you get a cookie
-    """
-    if trigger.group(3):
-        bot.say('Hey, ' + trigger.group(3).strip() + '! You! You got a cookie from ' + trigger.nick + '!')
-
-@module.commands('nocookie', 'nocolt')
-def nocolt(bot, trigger):
-    """
-    .nocookie [target] - Apparently you don't get a cookie
-    """
-    if trigger.group(3):
-        bot.say('Hey, ' + trigger.group(3).strip() + '! You don\'t get a cookie!')
         
 @module.commands('yuuki')
 def yuuki(bot, trigger):
