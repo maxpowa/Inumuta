@@ -10,6 +10,8 @@ ignore='--ignore=E501,E128,E127'
 # recently, so we'll forgive them until versions of PEP8 in various developers'
 #distros are updated
 ignore=$ignore',E265,E713,E111,E113,E402,E731'
+# Temporary ignores while Inumuta cleanup is in progress
+ignore=$ignore',E502,E122,E121'
 # For now, go through all the checking stages and only die at the end
 exit_code=0
 
