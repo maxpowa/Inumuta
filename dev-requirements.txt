@@ -11,4 +11,4 @@ beautifulsoup4
 pyfiglet
 tweepy
 mcstatus
-wolframalpha
+tungsten
