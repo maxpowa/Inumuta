@@ -30,7 +30,7 @@ from willie.config import Config, create_config, ConfigurationError, wizard
 import willie.tools as tools
 import willie.web
 
-homedir = os.path.join(os.path.expanduser('~'), '.inumuta')
+homedir = os.path.join(os.path.expanduser('~'), '.willie')
 
 
 def enumerate_configs(extension='.cfg'):
