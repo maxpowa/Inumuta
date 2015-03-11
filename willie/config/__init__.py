@@ -344,7 +344,7 @@ class Config(object):
         specified in the `core.extra` attribute of the `config` object. If two
         modules have the same name, the last one to be found will be returned
         and the rest will be ignored. Modules are found starting in the regular
-        directory, followed by `~/.inumuta/modules`, and then through the extra
+        directory, followed by `~/.willie/modules`, and then through the extra
         directories in the order that the are specified.
 
         If `show_all` is given as `True`, the `enable` and `exclude`
@@ -360,11 +360,11 @@ class Config(object):
         for fn in os.listdir(modules_dir):
             if fn.endswith('.py') and not fn.startswith('_'):
                 modules[fn[:-3]] = os.path.join(modules_dir, fn)
-        # Next, look in ~/.inumuta/modules
+        # Next, look in ~/.willie/modules
         if self.core.homedir is not None:
             home_modules_dir = os.path.join(self.core.homedir, 'modules')
         else:
-            home_modules_dir = os.path.join(os.path.expanduser('~'), '.inumuta',
+            home_modules_dir = os.path.join(os.path.expanduser('~'), '.willie',
                                             'modules')
         if not os.path.isdir(home_modules_dir):
             os.makedirs(home_modules_dir)
@@ -403,7 +403,7 @@ class Config(object):
 
 
 def wizard(section, config=None):
-    dotdir = os.path.expanduser('~/.inumuta')
+    dotdir = os.path.expanduser('~/.willie')
     configpath = os.path.join(dotdir, (config or 'default') + '.cfg')
     if section == 'all':
         create_config(configpath)
@@ -418,10 +418,10 @@ def wizard(section, config=None):
 
 
 def check_dir(create=True):
-    dotdir = os.path.join(os.path.expanduser('~'), '.inumuta')
+    dotdir = os.path.join(os.path.expanduser('~'), '.willie')
     if not os.path.isdir(dotdir):
         if create:
-            print('Creating a config directory at ~/.inumuta...')
+            print('Creating a config directory at ~/.willie...')
             try:
                 os.makedirs(dotdir)
             except Exception as e:
