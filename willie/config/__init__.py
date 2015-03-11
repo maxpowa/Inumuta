@@ -300,9 +300,9 @@ class Config(object):
 
     def _core(self):
         self.interactive_add('core', 'nick', 'Enter the nickname for your bot',
-                             'Willie')
+                             'Inumuta')
         self.interactive_add('core', 'host', 'Enter the server to connect to',
-                             'irc.dftba.net')
+                             'irc.esper.net')
         self.add_option('core', 'use_ssl', 'Should the bot connect with SSL')
         if self.use_ssl == 'True':
             default_port = '6697'
