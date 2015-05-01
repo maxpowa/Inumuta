@@ -12,3 +12,4 @@ pyfiglet
 tweepy
 mcstatus
 tungsten
+bottle
