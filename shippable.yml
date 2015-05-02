@@ -14,6 +14,6 @@ install:
 script:
   - ./checkstyle.sh
   - coverage run --source willie -m py.test .
-  - coverage xml -o shippable/codecoverage/coverage.xml .
+  - coverage xml -o shippable/codecoverage/coverage.xml
 # to speed up builds, we can cache deps.
 cache: true
