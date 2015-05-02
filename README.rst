@@ -18,5 +18,5 @@ For a list of contributions to the Jenni fork see the file ``CREDITS``.
 .. |shippable-status| image:: https://api.shippable.com/projects/54d314ab5ab6cc13528ae40d/badge?branchName=master
    :target: https://app.shippable.com/projects/54d314ab5ab6cc13528ae40d
    
-.. |coverage-badge| image:: https://coveralls.io/repos/maxpowa/Inumuta/badge.svg 
-   :target: https://coveralls.io/r/maxpowa/Inumuta
+.. |coverage-badge| image:: https://coveralls.io/repos/maxpowa/Inumuta/badge.svg?branch=master 
+   :target: https://coveralls.io/r/maxpowa/Inumuta?branch=master
