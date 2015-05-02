@@ -112,7 +112,7 @@ def head(uri, timeout=20, headers=None, verify_ssl=True):
 
 
 # HTTP POST
-def post(uri, query, limit_bytes=None, timeout=20, verify_ssl=True, return_headers=False):
+def post(uri, query, limit_bytes=None, headers=None, timeout=20, verify_ssl=True, return_headers=False):
     """Execute an HTTP POST query.
 
     `uri` is the target URI, and `query` is the POST data. `headers` is a dict
@@ -125,7 +125,7 @@ def post(uri, query, limit_bytes=None, timeout=20, verify_ssl=True, return_heade
     """
     if not uri.startswith('http'):
         uri = "http://" + uri
-    u = get_urllib_object(uri, timeout=timeout, verify_ssl=verify_ssl, data=query)
+    u = get_urllib_object(uri, timeout=timeout, headers=headers, verify_ssl=verify_ssl, data=query)
     bytes = u.read(limit_bytes)
     headers = dict(u.info())
     u.close()
