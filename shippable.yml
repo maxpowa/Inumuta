@@ -1,11 +1,17 @@
 language: python
+build_image: shippableimages/ubuntu1404_python
 python:
   - 2.7
 env:
   secure: ATsR5SVAvHGe67H1uqABvXS/548+Le9DgfeJ+YeF3MDoGSROVXZAOFWuonfYBnD2cueyZq+O1n/KC1eCaMU21gCNBq3Ikqjzu8yRx2yQn1hmeO+mYkf59pgQGEbytbOCRlkbkwudIwqH2yyLgkGyFnYf2QLH+hrOKt5x2rWCUVsy/w0je0cslyU67EY0pfMgsp/FceBQTXEsBlYXO0sQp2Tl6/XcTrwwdDmaL9MOjXRbn0+ciZEyARTwjQaxdXXITtPC5A5w/fDgGy16yDP4sdb4O+wgeyszbADR5x5sWzQFjK/cNgt5JgGHdm7MWCJ6yBrz6EaeSs2MqNYaOdgWAw==
 git:
   submodules: false
-before_script: mkdir -p shippable/codecoverage shippable/testresults
+before_install: 
+  - mkdir -p $HOME/venv/
+  - virtualenv -p $SHIPPABLE_PYTHON $HOME/venv/
+  - source $HOME/venv/bin/activate
+before_script:
+  - mkdir -p shippable/codecoverage shippable/testresults
 install:
   - sudo apt-get update
   - sudo apt-get install -qq enchant libxml2-dev libxslt1-dev python-dev
