@@ -15,6 +15,7 @@ script:
   - ./checkstyle.sh
   - coverage run --source willie -m py.test .
   - coverage report --show-missing
+  - coverage xml -o shippable/codecoverage/coverage.xml --source willie -m py.test .
 after_success:
   coveralls
 # to speed up builds, we can cache deps.
