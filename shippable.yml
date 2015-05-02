@@ -8,6 +8,9 @@ git:
 before_script: mkdir -p shippable/codecoverage shippable/testresults
 install:
   - sudo apt-get install -qq enchant
+  - sudo apt-get install libxml2-dev
+  - sudo apt-get install libxslt1-dev
+  - sudo apt-get install python-dev
   - pip install -r dev-requirements.txt
   - pip install coveralls
   - pip install pep8
