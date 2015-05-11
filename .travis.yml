@@ -3,8 +3,11 @@ python:
   - "2.7"
 git:
   submodules: false
+sudo: false  # Enables running on faster infrastructure.
+cache:
+  directories:
+    - $HOME/.cache/pip
 install:
-  - sudo apt-get install -qq enchant
   - pip install -r dev-requirements.txt
   - pip install coveralls
   - pip install pep8
