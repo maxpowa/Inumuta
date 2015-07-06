@@ -513,6 +513,7 @@ def handle_auth_response():
 def configure_repo_messages(bot, trigger):
     '''
     .gh-hook <repo> [enable|disable] - Enable/disable displaying webhooks from repo in current channel (You must be a channel OP)
+    Repo notation is just <user/org>/<repo>, not the whole URL.
     '''
     allowed = bot.privileges[trigger.sender].get(trigger.nick, 0) >= OP
     if not allowed and not trigger.admin:
@@ -524,7 +525,7 @@ def configure_repo_messages(bot, trigger):
     channel = trigger.sender.lower()
     repo_name = trigger.group(3).lower()
 
-    if not '/' in repo_name:
+    if not '/' in repo_name or 'http://' in repo_name or 'https://' in repo_name:
         return bot.say('Invalid repo formatting, see ".help gh-hook" for an example')
 
     enabled = True if not trigger.group(4) or trigger.group(4).lower() == 'enable' else False
@@ -805,6 +806,38 @@ def fmt_issue_summary_message(payload=None):
                   payload['issue']['title'])
 
 
+def fmt_issue_assignee_message(payload=None):
+    if not payload:
+        payload = current_payload
+    
+    target = ''
+    self_assign = False
+    if (payload['assignee']['login'] == payload['sender']['login']):
+        self_assign = True
+    else:
+        target = 'to ' if payload['action'] == 'assigned' else 'from '
+        target = target + fmt_name(payload['assignee']['login']) 
+    return '[{}] {} {}{} issue #{} {}'.format(
+                  fmt_repo(payload['repository']['name']),
+                  fmt_name(payload['sender']['login']),
+                  'self-' if self_assign else '',
+                  payload['action'],
+                  payload['issue']['number'],
+                  target)
+
+
+def fmt_issue_label_message(payload=None):
+    if not payload:
+        payload = current_payload
+    return '[{}] {} {} the label \'{}\' {} issue #{}'.format(
+                  fmt_repo(payload['repository']['name']),
+                  fmt_name(payload['sender']['login']),
+                  'added' if payload['action'] == 'labeled' else 'removed',
+                  payload['label']['name'],
+                  'to' if payload['action'] == 'labeled' else 'from',
+                  payload['issue']['number'])
+
+
 def fmt_issue_comment_summary_message(payload=None):
     if not payload:
         payload = current_payload
@@ -917,6 +950,10 @@ def send_formatted_message(payload, row):
     elif payload['event'] == 'issues':
         if re.match('(open|close)', payload['action']):
             messages.append(fmt_issue_summary_message() + " " + fmt_url(shorten_url(payload['issue']['html_url'])))
+        elif re.match('(assigned|unassigned)', payload['action']):
+            messages.append(fmt_issue_assignee_message() + " " + fmt_url(shorten_url(payload['issue']['html_url'])))
+        elif re.match('(labeled|unlabeled)', payload['action']):
+            messages.append(fmt_issue_label_message() + " " + fmt_url(shorten_url(payload['issue']['html_url'])))
     elif payload['event'] == 'issue_comment':
         messages.append(fmt_issue_comment_summary_message() + " " + fmt_url(shorten_url(payload['comment']['html_url'])))
     elif payload['event'] == 'gollum':
