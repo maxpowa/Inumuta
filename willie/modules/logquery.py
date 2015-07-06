@@ -91,6 +91,11 @@ def execute(*args, **kwargs):
         return cur.execute(*args, **kwargs)
 
 
+@commands('log')
+def show_log_url(bot, trigger):
+    bot.reply('http://irc.everythingisawesome.us/logs/channel/' + trigger.sender.replace('#', '', 1))
+
+
 @commands('disable-log')
 def do_not_log(bot, trigger):
     if bot.privileges[trigger.sender][trigger.nick] < OP:
@@ -214,7 +219,7 @@ def format_msg(msg):
     QUIT_TPL = "[{sent_at}] *** {nick} has quit IRC ({message})"
 
     intent = msg['intent']
-    msg['sent_at'] = msg['sent_at'].split(".")[0].split(" ")[1]
+    msg['sent_at'] = msg['sent_at'].split(".")[0]
     if (intent == 'PRIVMSG'):
         return MESSAGE_TPL.format(**msg)
     elif (intent == 'ACTION'):
