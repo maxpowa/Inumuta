@@ -183,3 +183,6 @@ class CoreSection(StaticSection):
 
     verify_ssl = ValidatedAttribute('verify_ssl', bool, default=True)
     """Whether to require a trusted SSL certificate for SSL connections."""
+
+    debug_target = ValidatedAttribute('debug_target', Identifier)
+    """Target channel/user for uncaught exceptions to be forwarded to."""
