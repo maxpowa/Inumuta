@@ -13,7 +13,6 @@ install:
   - pip install coveralls
   - pip install pep8
 script:
-  - pip install -e .
   - ./checkstyle.sh
   - coverage run --source sopel -m py.test sopel
   - coverage report --show-missing
