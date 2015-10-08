@@ -1,7 +1,7 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
+  - "3.4"
 git:
   submodules: false
 sudo: false  # Enables running on faster infrastructure.
@@ -14,5 +14,5 @@ install:
   - pip install pep8
 script:
   - ./checkstyle.sh
-  - coverage run --source willie -m py.test .
+  - coverage run --source sopel -m py.test .
   - coverage report --show-missing
