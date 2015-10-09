@@ -1,4 +1,4 @@
-Introduction |build-status| |shippable-status| |coverage-badge|
+Introduction |build-status| |coverage-badge|
 ---------------------------------------------
 
 Inumuta is a simple, lightweight, open source, easy-to-use IRC Utility bot,
@@ -14,9 +14,6 @@ For a list of contributions to the Jenni fork see the file ``CREDITS``.
 
 .. |build-status| image:: https://img.shields.io/travis/maxpowa/Inumuta.svg?style=flat-square
    :target: https://travis-ci.org/maxpowa/Inumuta
-   
-.. |shippable-status| image:: https://api.shippable.com/projects/54d314ab5ab6cc13528ae40d/badge?branchName=master
-   :target: https://app.shippable.com/projects/54d314ab5ab6cc13528ae40d
    
 .. |coverage-badge| image:: https://img.shields.io/coveralls/maxpowa/Inumuta.svg?style=flat-square
    :target: https://coveralls.io/r/maxpowa/Inumuta?branch=master
