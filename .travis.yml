@@ -16,3 +16,5 @@ script:
   - ./checkstyle.sh || true
   - coverage run --source sopel -m py.test sopel
   - coverage report --show-missing
+after_success:
+  coveralls
