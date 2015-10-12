@@ -388,7 +388,7 @@ class Bot(asynchat.async_chat):
         # Deprecated, but way too much of a pain to remove.
         self.say(text, recipient, max_messages)
 
-    def say(self, text, recipient, max_messages=1):
+    def say(self, text, recipient, max_messages=1, mode='PRIVMSG'):
         # We're arbitrarily saying that the max is 400 bytes of text when
         # messages will be split. Otherwise, we'd have to acocunt for the bot's
         # hostmask, which is hard.
@@ -449,7 +449,7 @@ class Bot(asynchat.async_chat):
                         # If we said '...' 3 times, discard message
                         return
 
-            self.write(('PRIVMSG', recipient), text)
+            self.write((mode, recipient), text)
             sendq['burst'] = max(0, sendq['burst']-1)
             sendq['messages'].append((time.time(), self.safe(text)))
             sendq['messages'] = sendq['messages'][-10:]
@@ -466,7 +466,7 @@ class Bot(asynchat.async_chat):
         See IRC protocol documentation for more information.
 
         """
-        self.write(('NOTICE', dest), text)
+        self.say(text, dest, mode='NOTICE')
 
     def action(self, text, dest):
         self.say('\001ACTION {}\001'.format(text), dest)
@@ -513,10 +513,10 @@ class Bot(asynchat.async_chat):
                 LOGGER.error("Could not save traceback from %s to file: %s", trigger.sender, str(e))
 
             if trigger:
-                LOGGER.error('Exception from %s: %s (%s)', trigger.sender, str(signature), trigger.raw)
+                LOGGER.error('Exception from {}: {} ({})'.format(trigger.sender, str(signature), trigger.raw))
         except Exception as e:
             if trigger:
-                LOGGER.error('Exception from %s: %s (%s)', trigger.sender, str(e), trigger.raw)
+                LOGGER.error('Exception from {}: {} ({})'.format(trigger.sender, str(e), trigger.raw))
 
 
     def handle_error(self):
