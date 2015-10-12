@@ -377,8 +377,6 @@ class Bot(asynchat.async_chat):
                 LOGGER.error('Exception from {}: {} ({})'.format(trigger.sender, str(signature), trigger.raw))
         except Exception as e:
             if trigger and self.config.core.reply_errors and trigger.sender is not None:
-                self.msg(trigger.sender, "Got an error.")
-            if trigger:
                 LOGGER.error('Exception from {}: {} ({})'.format(trigger.sender, str(e), trigger.raw))
 
     def handle_error(self):
