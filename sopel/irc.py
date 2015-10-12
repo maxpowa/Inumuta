@@ -420,22 +420,28 @@ class Bot(asynchat.async_chat):
 
             recipient_id = Identifier(recipient)
 
-            if recipient_id not in self.stack:
-                self.stack[recipient_id] = []
-            elif self.stack[recipient_id]:
-                elapsed = time.time() - self.stack[recipient_id][-1][0]
-                if elapsed < 5:
-                    self.allowed_chars = min(self.allowed_chars + (self.flood_limit / 10.0) * elapsed, self.flood_limit)
-                    self.allowed_chars -= len(text)
-                    if len(text) > self.allowed_chars:
-                        delay = (len(text) * 0.8) / (self.flood_limit / 10.0)
-                        delay = min(delay, 0.75)
-                        time.sleep(delay)
-                else:
-                    self.allowed_chars = self.flood_limit
+            sendq = self.stack.get(recipient_id)
+            if not sendq:
+                sendq = self.stack[recipient_id] = {
+                    'messages': [],
+                    'burst': self.config.core.bucket_burst_tokens,
+                }
+
+            if not sendq['burst']:
+                elapsed = time.time() - sendq['messages'][-1][0]
+                sendq['burst'] = min(
+                    self.config.core.bucket_burst_tokens,
+                    int(elapsed) * self.config.core.bucket_refill_rate)
+
+            if not sendq['burst']:
+                elapsed = time.time() - sendq['messages'][-1][0]
+                penalty = float(max(0, len(text) - 50)) / 70
+                wait = self.config.core.bucket_empty_wait + penalty
+                if elapsed < wait:
+                    time.sleep(wait - elapsed)
 
                 # Loop detection
-                messages = [m[1] for m in self.stack[recipient_id][-8:]]
+                messages = [m[1] for m in sendq['messages'][-8:]]
 
                 # If what we about to send repeated at least 5 times in the
                 # last 2 minutes, replace with '...'
@@ -446,8 +452,9 @@ class Bot(asynchat.async_chat):
                         return
 
             self.write(('PRIVMSG', recipient), text)
-            self.stack[recipient_id].append((time.time(), self.safe(text)))
-            self.stack[recipient_id] = self.stack[recipient_id][-10:]
+            sendq['burst'] = max(0, sendq['burst']-1)
+            sendq['messages'].append((time.time(), self.safe(text)))
+            sendq['messages'] = sendq['messages'][-10:]
         finally:
             self.sending.release()
         # Now that we've sent the first part, we need to send the rest. Doing
@@ -507,15 +514,12 @@ class Bot(asynchat.async_chat):
                 stderr("Could not save full traceback!")
                 LOGGER.error("Could not save traceback from %s to file: %s", trigger.sender, str(e))
 
-            if trigger and self.config.core.debug_target:
-                self.msg(self.config.core.debug_target, 'Exception in ' + trigger.sender + '!')
-                self.msg(self.config.core.debug_target, signature)
-                self.msg(self.config.core.debug_target, 'Cause: ' + trigger.raw)
+            if trigger:
+                LOGGER.error('Exception from %s: %s (%s)', trigger.sender, str(signature), trigger.raw)
         except Exception as e:
             if trigger:
-                if self.config.core.debug_target:
-                    self.msg(self.config.core.debug_target, "Got an error.")
-                LOGGER.error("Exception from %s: %s", trigger.sender, str(e))
+                LOGGER.error('Exception from %s: %s (%s)', trigger.sender, str(e), trigger.raw)
+
 
     def handle_error(self):
         """Handle any uncaptured error in the core.
