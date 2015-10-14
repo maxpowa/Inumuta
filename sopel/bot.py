@@ -339,8 +339,7 @@ class Sopel(irc.Bot):
             bad_nick = bad_nick.strip()
             if not bad_nick:
                 continue
-            if (re.match(bad_nick + '$', nick, re.IGNORECASE) or
-                    Identifier(bad_nick) == nick):
+            if (bad_nick.lower() == nick.lower()):
                 return True
         return False
 
