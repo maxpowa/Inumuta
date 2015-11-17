@@ -277,7 +277,7 @@ class Sopel(irc.Bot):
 
         list_of_blocked_functions = []
         for priority in ('high', 'medium', 'low'):
-            items = self._callables[priority].items()
+            items = dict(self._callables[priority]).items()
 
             for regexp, funcs in items:
                 match = regexp.match(text)
