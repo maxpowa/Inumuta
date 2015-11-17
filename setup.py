@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding=utf8
+# coding=utf-8
 from __future__ import unicode_literals, print_function
 
 from sopel import __version__
@@ -17,17 +17,6 @@ except ImportError:
         file=sys.stderr,
     )
     sys.exit(1)
-
-try:
-    import lxml  # NOQA
-except ImportError:
-    print(
-        '----- WARNING ----- SERIOUSLY, READ THIS ----- I MEAN IT -----\n'
-        'You do not have lxml installed. This installer will attempt to '
-        'install it, but it frequently fails. Please follow the instructions '
-        'at http://lxml.de/installation.html if installation does not succeed.',
-        file=sys.stderr,
-    )
 
 if sys.version_info < (2, 7) or (
         sys.version_info[0] > 3 and sys.version_info < (3, 3)):

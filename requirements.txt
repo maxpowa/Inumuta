@@ -1,6 +1,5 @@
-feedparser
+xmltodict
 pytz
-lxml
 praw
 pyenchant
 pygeoip

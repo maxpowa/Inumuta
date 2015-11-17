@@ -9,8 +9,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://sopel.chat/
 """
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import unicode_literals, absolute_import, print_function, division
 
 from collections import namedtuple
 import os
@@ -19,7 +18,7 @@ import time
 import traceback
 import signal
 
-__version__ = '6.0.0'
+__version__ = '6.1.0'
 
 
 def _version_info(version=__version__):
