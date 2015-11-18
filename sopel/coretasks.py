@@ -109,12 +109,13 @@ def account_notify(bot, trigger):
             continue
         if trigger.args[0] == '*':
             del bot.accounts[channel][trigger.nick]
-            continue # We are deleting, we don't want to assign the host to account *
+            # We are deleting, skip the next part
+            return
         bot.accounts[channel][trigger.nick] = trigger.args[0]
 
 
 def account_cap_failed(bot, cap):
-    LOGGER.warning('Failed to enable %s, this may cause issues with `bot.accounts`' %s (cap,))
+    LOGGER.warning('Failed to enable %s, this may cause issues with `bot.accounts`' % (cap,))
 
 
 @sopel.module.event('354')
@@ -123,7 +124,8 @@ def account_cap_failed(bot, cap):
 @sopel.module.unblockable
 def recv_who(bot, trigger):
     if len(trigger.args) < 2 or trigger.args[1] not in who_reqs:
-        return # Ignored, some strange thing happened
+        # Ignored, some module probably called WHO
+        return
     channel = who_reqs[trigger.args[1]]
     if len(trigger.args) < 3:
         return LOGGER.warning('While populating `bot.accounts` a WHO response was malformed.')
@@ -344,7 +346,8 @@ def track_join(bot, trigger):
         # Should work on any IRCd thats supporting IRCv3.1
         bot.write(['WHO', trigger.sender, 'a%nat,' + rand])
     bot.privileges[trigger.sender][trigger.nick] = 0
-    if len(trigger.args) > 1 and trigger.args[1] != '*': # We can assume we have extended-join if there's more than one arg
+    if len(trigger.args) > 1 and trigger.args[1] != '*': 
+        # We can assume we have extended-join if there's more than one arg
         bot.accounts[trigger.sender][str(trigger.nick)] = trigger.args[1]
 
 
