@@ -260,7 +260,7 @@ class Sopel(irc.Bot):
         # Deprecated, but way too much of a pain to remove.
         self.say(text, recipient, max_messages)
 
-    def say(self, text, recipient, max_messages=1):
+    def say(self, text, recipient, max_messages=1, mode='PRIVMSG'):
         """Send ``text`` as a PRIVMSG to ``recipient``.
 
         In the context of a triggered callable, the ``recipient`` defaults to
@@ -306,18 +306,27 @@ class Sopel(irc.Bot):
 
             recipient_id = Identifier(recipient)
 
-            if recipient_id not in self.stack:
-                self.stack[recipient_id] = []
-            elif self.stack[recipient_id]:
-                elapsed = time.time() - self.stack[recipient_id][-1][0]
-                if elapsed < 3:
-                    penalty = float(max(0, len(text) - 40)) / 70
-                    wait = 0.8 + penalty
-                    if elapsed < wait:
-                        time.sleep(wait - elapsed)
+            reciprec = self.stack.get(recipient_id)
+            if not reciprec:
+                reciprec = self.stack[recipient_id] = {
+                    'messages': [],
+                    'burst': self.config.core.bucket_burst_tokens,
+                }
+
+            if not reciprec['burst']:
+                elapsed = time.time() - reciprec['messages'][-1][0]
+                reciprec['burst'] = min(
+                    self.config.core.bucket_burst_tokens,
+                    int(elapsed) * self.config.core.bucket_refill_rate)
+
+            if not reciprec['burst']:
+                elapsed = time.time() - reciprec['messages'][-1][0]
+                wait = self.config.core.bucket_empty_wait
+                if elapsed < wait:
+                    time.sleep(wait - elapsed)
 
                 # Loop detection
-                messages = [m[1] for m in self.stack[recipient_id][-8:]]
+                messages = [m[1] for m in reciprec['messages'][-8:]]
 
                 # If what we about to send repeated at least 5 times in the
                 # last 2 minutes, replace with '...'
@@ -327,9 +336,10 @@ class Sopel(irc.Bot):
                         # If we said '...' 3 times, discard message
                         return
 
-            self.write(('PRIVMSG', recipient), text)
-            self.stack[recipient_id].append((time.time(), self.safe(text)))
-            self.stack[recipient_id] = self.stack[recipient_id][-10:]
+            self.write((mode, recipient), text)
+            reciprec['burst'] = max(0, reciprec['burst']-1)
+            reciprec['messages'].append((time.time(), self.safe(text)))
+            reciprec['messages'] = reciprec['messages'][-10:]
         finally:
             self.sending.release()
         # Now that we've sent the first part, we need to send the rest. Doing
@@ -344,7 +354,7 @@ class Sopel(irc.Bot):
         the channel (or nickname, if a private message), in which the trigger
         happened.
         """
-        self.write(('NOTICE', dest), text)
+        self.say(text, dest, mode='NOTICE')
 
     def action(self, text, dest):
         """Send ``text`` as a CTCP ACTION PRIVMSG to ``dest``.
