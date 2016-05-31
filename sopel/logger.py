@@ -37,7 +37,8 @@ def setup_logging(bot):
     logging.basicConfig(level=level)
     logger = logging.getLogger('sopel')
     if bot.config.core.logging_channel:
-        handler = IrcLoggingHandler(bot, level)
+        channel_level = bot.config.core.logging_chan_level or level
+        handler = IrcLoggingHandler(bot, channel_level)
         handler.setFormatter(ChannelOutputFormatter())
         logger.addHandler(handler)
 

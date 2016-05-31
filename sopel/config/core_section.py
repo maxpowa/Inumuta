@@ -130,7 +130,13 @@ class CoreSection(StaticSection):
                                     ['CRITICAL', 'ERROR', 'WARNING', 'INFO',
                                      'DEBUG'],
                                     'WARNING')
-    """The lowest severity of logs to display."""
+    """The lowest severity of logs to display in stdout."""
+
+    logging_chan_level = ChoiceAttribute('logging_chan_level',
+                                    ['CRITICAL', 'ERROR', 'WARNING', 'INFO',
+                                     'DEBUG'],
+                                    'WARNING')
+    """The lowest severity of logs to display in the logging channel."""
 
     modes = ValidatedAttribute('modes', default='B')
     """User modes to be set on connection."""
