@@ -530,15 +530,16 @@ class Sopel(irc.Bot):
 
         if list_of_blocked_functions:
             if nick_blocked and host_blocked:
-                block_type = 'both'
+                block_type = 'nick and host'
             elif nick_blocked:
                 block_type = 'nick'
             else:
                 block_type = 'host'
             LOGGER.info(
-                "[%s]%s prevented from using %s.",
-                block_type,
+                "%s prevented from using %d functions due to %s blocks (Blocked functions: %s)",
                 trigger.nick,
+                len(list_of_blocked_functions),
+                block_type,
                 ', '.join(list_of_blocked_functions)
             )
 
