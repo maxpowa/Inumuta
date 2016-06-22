@@ -78,6 +78,7 @@ def setup(bot):
 
     targs = (bot,)
     t = threading.Thread(target=monitor, args=targs)
+    t.daemon = True
     t.start()
 
 scaling = collections.OrderedDict([
