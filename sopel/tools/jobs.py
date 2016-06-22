@@ -67,6 +67,7 @@ class JobScheduler(threading.Thread):
     def __init__(self, bot):
         """Requires bot as argument for logging."""
         threading.Thread.__init__(self)
+        self.daemon = True
         self.bot = bot
         self._jobs = PriorityQueue()
         # While PriorityQueue it self is thread safe, this mutex is needed
