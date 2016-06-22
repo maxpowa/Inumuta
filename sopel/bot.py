@@ -514,6 +514,7 @@ class Sopel(irc.Bot):
                     if func.thread:
                         targs = (func, wrapper, trigger)
                         t = threading.Thread(target=self.call, args=targs)
+                        t.daemon = True
                         t.start()
                     else:
                         self.call(func, wrapper, trigger)
